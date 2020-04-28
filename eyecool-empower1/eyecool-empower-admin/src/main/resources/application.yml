@@ -1,0 +1,170 @@
+# 项目相关配置
+ruoyi:
+  # 名称
+  name: Eyecool-Biapwp
+  # 版本
+  version: 2.1.4.beta
+  # 版权年份
+  copyrightYear: 2020
+  # 版权信息
+  copyright: Eyecool 2020
+  # 实例演示开关
+  demoEnabled: false
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
+  # 获取ip地址开关
+  addressEnabled: true
+  # 登录页欢迎语
+  welcomeMsg: 欢迎使用 智慧园区生物识别身份认证平台后台管理系统
+  # 应用中文名称
+  appname: 智慧园区生物平台
+  
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 8765
+  servlet:
+    # 应用的访问路径
+    context-path: /empower
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+
+# 日志配置
+logging:
+  level:
+    com.ruoyi: debug
+    com.ruoyi.common: error
+    cn.eyecool: debug
+    cn.eyecool.grpc: error
+    org.springframework: error
+
+# 用户配置
+user:
+  password:
+    # 密码错误{maxRetryCount}次锁定10分钟
+    maxRetryCount: 5
+# Spring配置
+spring:
+  # 模板引擎
+  thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: static/i18n/messages
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles:
+    active: druid,msg
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size:  500MB
+      # 设置总上传的文件大小
+      max-request-size:  500MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+      
+
+# MyBatis
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ruoyi,cn.eyecool.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  configuration:
+    # 允许 JDBC 支持自动生成主键(mysql允许，oracle和postgresql不允许)
+    use-generated-keys: true
+     # 多数据库支持，数据库标识(mysql,oracle,postgresql)
+    database-id: mysql
+
+# PageHelper分页插件
+pagehelper:
+  # 可以配置[mysql|oracle|postgresql]
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# Shiro
+shiro:
+  user:
+    # 登录地址
+    loginUrl: /login
+    # 权限认证失败地址
+    unauthorizedUrl: /unauth
+    # 首页地址
+    indexUrl: /index
+    # 验证码开关
+    captchaEnabled: true
+    # 验证码类型 math 数组计算 char 字符
+    captchaType: math
+  cookie:
+    # 设置Cookie的域名 默认空，即当前访问的域名
+    domain:
+    # 设置cookie的有效访问路径
+    path: /
+    # 设置HttpOnly属性
+    httpOnly: true
+    # 设置Cookie的过期时间，天为单位
+    maxAge: 30
+  session:
+    # Session超时时间，-1代表永不过期（默认30分钟）
+    expireTime: 30
+    # 同步session到数据库的周期（默认1分钟）
+    dbSyncPeriod: 1
+    # 相隔多久检查一次session的有效性，默认就是10分钟
+    validationInterval: 10
+    # 同一个用户最大会话数，比如2的意思是同一个账号允许最多同时两个人登录（默认-1不限制）
+    maxSession: -1
+    # 踢出之前登录的/之后登录的用户，默认踢出之前登录的用户
+    kickoutAfter: false
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+#算法微服务
+cn:
+  eyecool:
+    grpc:
+      enabled: true
+      loadBalancerType: Predictable
+      consumer:
+        match:
+          FeatureMatchService: grpc://192.168.63.6:9991?metadata=algType:face;grpc://192.168.63.6:9992?metadata=algType:finger;grpc://192.168.63.6:9993?metadata=algType:iris
+        extraction:
+          FeatureExtractionService: grpc://192.168.63.6:9991?metadata=algType:face;grpc://192.168.63.6:9992?metadata=algType:finger;grpc://192.168.63.6:9993?metadata=algType:iris
+        detection:
+          DetectionService: grpc://192.168.63.6:9991?metadata=algType:face
+          ImageAttributeDetectionService: grpc://192.168.63.6:9991?metadata=algType:face
+        data_access:
+          DataSearchService: grpc://192.168.63.6:11091?metadata=algType:face;grpc://192.168.63.6:11092?metadata=algType:finger;grpc://192.168.63.6:11093?metadata=algType:iris
+          DataMatchService: grpc://192.168.63.6:11091?metadata=algType:face;grpc://192.168.63.6:11092?metadata=algType:finger;grpc://192.168.63.6:11093?metadata=algType:iris
+        face_service: #检活
+          FaceDetectionService: grpc://192.168.63.6:9981?metadata=algType:face
+        quality:
+          BioImageQualityService: grpc://192.168.63.6:9991?metadata=algType:face;grpc://192.168.63.6:9992?metadata=algType:finger
+        minisearch:
+          data_store:
+            DataStoreService: grpc://192.168.63.6:8088

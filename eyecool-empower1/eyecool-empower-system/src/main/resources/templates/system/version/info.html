@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header('版本信息')"></head>
+<th:block th:include="include :: jsonview-css" />
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m">
+			<input hidden="hidden" th:value="${gitProperties}" name="gitProperties" id="gitProperties"/>
+			<div class="form-group">
+				<div class="form-control-static">
+					<pre id="jsonResult"></pre>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="include::footer"></div>
+	<th:block th:include="include :: jsonview-js" />
+	<script type="text/javascript">
+		var gitProperties= $('#gitProperties').val();
+		if ($.common.isNotEmpty(gitProperties)) {
+    		$("#jsonResult").JSONView(gitProperties);
+    	} 
+	</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SyncOfficeInfoMapper">
+    
+    <resultMap type="SyncOfficeInfo" id="SyncOfficeInfoResult">
+        <result property="id"    column="id"    />
+        <result property="officeName"    column="office_name"    />
+        <result property="officeEn"    column="office_en"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="officeAddress"    column="office_address"    />
+        <result property="officePhone"    column="office_phone"    />
+        <result property="status"    column="STATUS"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSyncOfficeInfoVo">
+        select id, office_name, office_en, parent_id, office_address, office_phone, STATUS, create_time, update_time from sync_office_info
+    </sql>
+
+    <select id="selectSyncOfficeInfoList" parameterType="SyncOfficeInfo" resultMap="SyncOfficeInfoResult">
+        <include refid="selectSyncOfficeInfoVo"/>
+        <where>  
+            <if test="officeName != null  and officeName != ''"> and office_name like concat(concat('%', #{officeName}), '%')</if>
+            <if test="officeEn != null  and officeEn != ''"> and office_en = #{officeEn}</if>
+            <if test="parentId != null  and parentId != ''"> and parent_id = #{parentId}</if>
+            <if test="officeAddress != null  and officeAddress != ''"> and office_address = #{officeAddress}</if>
+            <if test="officePhone != null  and officePhone != ''"> and office_phone = #{officePhone}</if>
+            <if test="status != null  and status != ''"> and STATUS = #{status}</if>
+        </where>
+        order by parent_id
+    </select>
+    
+    <select id="selectSyncOfficeInfoById" parameterType="String" resultMap="SyncOfficeInfoResult">
+        <include refid="selectSyncOfficeInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSyncOfficeInfo" parameterType="SyncOfficeInfo">
+        insert into sync_office_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="officeName != null  and officeName != ''">office_name,</if>
+            <if test="officeEn != null  and officeEn != ''">office_en,</if>
+            <if test="parentId != null  and parentId != ''">parent_id,</if>
+            <if test="officeAddress != null  and officeAddress != ''">office_address,</if>
+            <if test="officePhone != null  and officePhone != ''">office_phone,</if>
+            <if test="status != null  and status != ''">STATUS,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="officeName != null  and officeName != ''">#{officeName},</if>
+            <if test="officeEn != null  and officeEn != ''">#{officeEn},</if>
+            <if test="parentId != null  and parentId != ''">#{parentId},</if>
+            <if test="officeAddress != null  and officeAddress != ''">#{officeAddress},</if>
+            <if test="officePhone != null  and officePhone != ''">#{officePhone},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSyncOfficeInfo" parameterType="SyncOfficeInfo">
+        update sync_office_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="officeName != null  and officeName != ''">office_name = #{officeName},</if>
+            <if test="officeEn != null  and officeEn != ''">office_en = #{officeEn},</if>
+            <if test="parentId != null  and parentId != ''">parent_id = #{parentId},</if>
+            <if test="officeAddress != null  and officeAddress != ''">office_address = #{officeAddress},</if>
+            <if test="officePhone != null  and officePhone != ''">office_phone = #{officePhone},</if>
+            <if test="status != null  and status != ''">STATUS = #{status},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSyncOfficeInfoById" parameterType="String">
+        delete from sync_office_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSyncOfficeInfoByIds" parameterType="String">
+        delete from sync_office_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

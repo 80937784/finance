@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- CAS验证服务器地址 -->
+	<loginServer>http://id.ouc.edu.cn:8071/sso</loginServer>
+	<validateServer>http://id.ouc.edu.cn:8071/sso</validateServer>
+	<!--平台地址-->
+	<serverName>http://192.168.60.137:8765</serverName>
+	<!-- 排除被保护的资源  -->
+	<notForceAuthUrls>
+		<url-pattern>\.js$</url-pattern>
+		<url-pattern>\.xml$</url-pattern>
+		<url-pattern>\.html.*</url-pattern>
+		<url-pattern><![CDATA[.*/fileUpload.*]]></url-pattern>
+		<!-- 如果不需要校验，添加以下配置即可 -->
+		<url-pattern>/*</url-pattern>
+	</notForceAuthUrls>
+</config>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('组织机构列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                        	<li>
+                                <p>部门名称：</p>
+                                <input type="text" name="officeName"/>
+                            </li>
+                            <li>
+                                <p>部门编码：</p>
+                                <input type="text" name="id"/>
+                            </li>
+                            <li>
+								部门状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+             <div class="col-sm-12 select-table table-striped">
+	            <table id="bootstrap-tree-table"></table>
+	        </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+    	var datas = [[${@dict.getType('sys_normal_disable')}]];
+      	var prefix = ctx + "system/office";
+      	
+        $(function() {
+            var options = {
+          		code: "id",
+  		        parentCode: "parentId",
+  		      	uniqueId: "id",
+                url: prefix + "/list",
+                modalName: "组织机构",
+                columns: [{
+                    field: 'selectItem', 
+                    radio: true
+                },
+                {
+                    field : 'officeName', 
+                    title : '部门名称'
+                },
+                {
+                    field : 'id', 
+                    title : '部门编码',
+                },
+                {
+                    field : 'officeEn', 
+                    title : '部门英文名称',
+                    visible: false
+                },
+                {
+                    field : 'parentId', 
+                    title : '隶属部门号',
+                    visible: false
+                },
+                {
+                    field : 'officeAddress', 
+                    title : '部门地址',
+                    visible: false
+                },
+                {
+                    field : 'officePhone', 
+                    title : '部门联系电话',
+                    visible: false
+                },
+                {
+                    field : 'status', 
+                    title : '部门状态',
+                    formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(datas, item.status);
+		            }
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间'
+                },{
+                    field: 'updateTime',
+                    title: '修改时间',
+                }]
+            };
+            $.treeTable.init(options);
+        });
+    </script>
+</body>
+</html>

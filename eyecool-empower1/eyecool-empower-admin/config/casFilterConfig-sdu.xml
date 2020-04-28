@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- CAS验证服务器地址 -->
+	<loginServer>http://pass.sdu.edu.cn/cas</loginServer>
+	<validateServer>http://pass.sdu.edu.cn/cas</validateServer>
+	<!--平台地址-->
+	<serverName>http://127.0.0.1:9080</serverName>
+	<!-- 排除被保护的资源  -->
+	<notForceAuthUrls>
+		<url-pattern>\.js$</url-pattern>
+		<url-pattern>\.xml$</url-pattern>
+		<url-pattern>\.html.*</url-pattern>
+		<url-pattern><![CDATA[.*/fileUpload.*]]></url-pattern>
+		<!-- 如果不需要校验，添加以下配置即可 -->
+		<!-- <url-pattern>/*</url-pattern> -->
+	</notForceAuthUrls>
+</config>

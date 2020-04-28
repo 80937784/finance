@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BaseRequestRecordMapper">
+    
+    <resultMap type="BaseRequestRecord" id="BaseRequestRecordResult">
+        <result property="id"    column="id"    />
+        <result property="transCode"    column="trans_code"    />
+        <result property="transTitle"    column="trans_title"    />
+        <result property="receivedTime"    column="received_time"    />
+        <result property="requestMsg"    column="request_msg"    />
+        <result property="clientIp"    column="client_ip"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="responseMsg"    column="response_msg"    />
+        <result property="timeUsed"    column="time_used"    />
+        <result property="statusCode"    column="status_code"    />
+        <result property="transUrl"    column="trans_url"    />
+        <result property="classMethod"    column="class_method"    />
+        <result property="channelCode"    column="channel_code"    />
+    </resultMap>
+
+    <sql id="selectBaseRequestRecordVo">
+        select id, trans_code, trans_title, received_time, request_msg, client_ip, send_time, response_msg, time_used, status_code, trans_url, class_method, channel_code from base_request_record
+    </sql>
+
+    <select id="selectBaseRequestRecordList" parameterType="BaseRequestRecord" resultMap="BaseRequestRecordResult">
+        <include refid="selectBaseRequestRecordVo"/>
+        <where>  
+            <if test="transCode != null  and transCode != ''"> and trans_code = #{transCode}</if>
+            <if test="transTitle != null  and transTitle != ''"> and trans_title = #{transTitle}</if>
+            <if test="receivedTime != null "> and received_time = #{receivedTime}</if>
+            <if test="requestMsg != null  and requestMsg != ''"> and request_msg = #{requestMsg}</if>
+            <if test="clientIp != null  and clientIp != ''"> and client_ip = #{clientIp}</if>
+            <if test="sendTime != null "> and send_time = #{sendTime}</if>
+            <if test="responseMsg != null  and responseMsg != ''"> and response_msg = #{responseMsg}</if>
+            <if test="timeUsed != null "> and time_used = #{timeUsed}</if>
+            <if test="statusCode != null  and statusCode != ''"> and status_code = #{statusCode}</if>
+            <if test="transUrl != null  and transUrl != ''"> and trans_url = #{transUrl}</if>
+            <if test="classMethod != null  and classMethod != ''"> and class_method = #{classMethod}</if>
+            <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
+        </where>
+        order by received_time desc
+    </select>
+    
+    <select id="selectBaseRequestRecordById" parameterType="String" resultMap="BaseRequestRecordResult">
+        <include refid="selectBaseRequestRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaseRequestRecord" parameterType="BaseRequestRecord">
+        insert into base_request_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="transCode != null  and transCode != ''">trans_code,</if>
+            <if test="transTitle != null  and transTitle != ''">trans_title,</if>
+            <if test="receivedTime != null ">received_time,</if>
+            <if test="requestMsg != null  and requestMsg != ''">request_msg,</if>
+            <if test="clientIp != null  and clientIp != ''">client_ip,</if>
+            <if test="sendTime != null ">send_time,</if>
+            <if test="responseMsg != null  and responseMsg != ''">response_msg,</if>
+            <if test="timeUsed != null ">time_used,</if>
+            <if test="statusCode != null  and statusCode != ''">status_code,</if>
+            <if test="transUrl != null  and transUrl != ''">trans_url,</if>
+            <if test="classMethod != null  and classMethod != ''">class_method,</if>
+            <if test="channelCode != null  and channelCode != ''">channel_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="transCode != null  and transCode != ''">#{transCode},</if>
+            <if test="transTitle != null  and transTitle != ''">#{transTitle},</if>
+            <if test="receivedTime != null ">#{receivedTime},</if>
+            <if test="requestMsg != null  and requestMsg != ''">#{requestMsg},</if>
+            <if test="clientIp != null  and clientIp != ''">#{clientIp},</if>
+            <if test="sendTime != null ">#{sendTime},</if>
+            <if test="responseMsg != null  and responseMsg != ''">#{responseMsg},</if>
+            <if test="timeUsed != null ">#{timeUsed},</if>
+            <if test="statusCode != null  and statusCode != ''">#{statusCode},</if>
+            <if test="transUrl != null  and transUrl != ''">#{transUrl},</if>
+            <if test="classMethod != null  and classMethod != ''">#{classMethod},</if>
+            <if test="channelCode != null  and channelCode != ''">#{channelCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaseRequestRecord" parameterType="BaseRequestRecord">
+        update base_request_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="transCode != null  and transCode != ''">trans_code = #{transCode},</if>
+            <if test="transTitle != null  and transTitle != ''">trans_title = #{transTitle},</if>
+            <if test="receivedTime != null ">received_time = #{receivedTime},</if>
+            <if test="requestMsg != null  and requestMsg != ''">request_msg = #{requestMsg},</if>
+            <if test="clientIp != null  and clientIp != ''">client_ip = #{clientIp},</if>
+            <if test="sendTime != null ">send_time = #{sendTime},</if>
+            <if test="responseMsg != null  and responseMsg != ''">response_msg = #{responseMsg},</if>
+            <if test="timeUsed != null ">time_used = #{timeUsed},</if>
+            <if test="statusCode != null  and statusCode != ''">status_code = #{statusCode},</if>
+            <if test="transUrl != null  and transUrl != ''">trans_url = #{transUrl},</if>
+            <if test="classMethod != null  and classMethod != ''">class_method = #{classMethod},</if>
+            <if test="channelCode != null  and channelCode != ''">channel_code = #{channelCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaseRequestRecordById" parameterType="String">
+        delete from base_request_record where id = #{id}
+    </delete>
+
+    <delete id="deleteBaseRequestRecordByIds" parameterType="String">
+        delete from base_request_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

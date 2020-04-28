@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>empower</artifactId>
+		<groupId>cn.eyecool</groupId>
+		<version>2.1.4.beta</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>eyecool-empower-system</artifactId>
+
+	<description>
+	    system系统模块
+	</description>
+
+	<dependencies>
+
+		<!-- Mysql驱动包 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!--oracle驱动 -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>${oracle.version}</version>
+		</dependency>
+
+		<!--postgresql驱动 -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- 通用工具 -->
+		<dependency>
+			<groupId>cn.eyecool</groupId>
+			<artifactId>eyecool-empower-common</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>
