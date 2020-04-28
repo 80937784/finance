@@ -4,14 +4,14 @@
 
 	<groupId>cn.eyecool</groupId>
 	<artifactId>empower</artifactId>
-	<version>2.1.4.beta</version>
+	<version>1.0.0</version>
 
 	<name>empower</name>
 	<url/>
 	<description>管理系统</description>
 
 	<properties>
-		<ruoyi.version>2.1.4.beta</ruoyi.version>
+		<ruoyi.version>1.0.0</ruoyi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>

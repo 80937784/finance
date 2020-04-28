@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     
     <title>登录</title>
-    <meta name="description" content="智慧园区后台管理框架">
+    <meta name="description" content="授权后台管理框架">
     <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
     <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
@@ -31,13 +31,14 @@
                     <div class="logopanel m-b">
                         <!-- default
                         <h1><img alt="[ 若依 ]" src="../static/ruoyi.png" th:src="@{/ruoyi.png}"></h1> -->
-                        <h1><img alt="[ 智慧园区 ]" src="../static/eyecool.png" th:src="@{outsrc/login_logo.png}"></h1>
+                        <!--<h1><img alt="[ 授权管理 ]" src="../static/eyecool.png" th:src="@{outsrc/login_logo.png}"></h1>-->
+                        <h1><img alt="[ 授权管理 ]" src="../static/eyecool.png" th:src="@{/eyecool.png}"></h1>
                     </div>
                     <div class="m-b"></div>
                     <h4>[[${welcomeMsg}]]</h4>
                     <ul class="m-b">
                     </ul>
-                    <strong th:if="${@config.getKey('sys.account.registerUser')}">还没有账号？ <a style="color:#dedede;" th:href="@{/register}">立即注册&raquo;</a></strong>
+                    <!--<strong th:if="${@config.getKey('sys.account.registerUser')}">还没有账号？ <a style="color:#dedede;" th:href="@{/register}">立即注册&raquo;</a></strong>-->
                 </div>
             </div>
             <div class="col-sm-5">
