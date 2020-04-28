@@ -1,0 +1,16 @@
+target/
+.idea
+logs/
+*.class
+.settings/
+build/
+bin/
+*.project
+*.classpath
+!/document/
+!/eyecool-abis/
+*.pdb
+
+
+
+
