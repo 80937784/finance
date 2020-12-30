@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>统计</title>
+<link rel="shortcut icon" href="favicon.ico">
+<link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+<link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet" />
+<link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet" />
+<style type="text/css">
+.btn.active {
+	color: #fff;
+	background-color: #1AB394;
+}
+
+.progress {
+	background-color: #e7eaec;
+}
+
+thead tr {
+    background-color: #eaeaea;
+}
+
+tr.trans-tr.odd {
+    background: #ebebeb;
+}
+
+.flot-chart-content > div:first-child {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.service-multi-model-distribution{
+	position: absolute;
+    top: 65px;
+    right: 0px;
+    width: 375px;
+    height: 300px;
+    z-index: 10000;
+    border: 1px solid #999;
+    background-color: #fff;
+    opacity: 0.6;
+    border-radius: 5px;
+    box-shadow: -5px -5px 6px #ccc;
+    display: none;
+}
+</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-danger pull-right" title="人员标记为[黑名单]">黑名单</span>
+						<h5>人员信息</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 id="personCount" class="no-margins">0</h1>
+						<div class="stat-percent font-bold text-danger">
+							<span id="blackListRatio">0%</span> <i class="fa fa-bolt"></i>
+						</div>
+						<small>总人数</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-success pull-right">多模态</span>
+						<h5>支持场景</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 id="channelCount" class="no-margins">0</h1>
+						<div class="stat-percent font-bold text-success">
+							<span id="multiBioChannelRatio">0%</span> <i class="fa fa-bolt"></i>
+						</div>
+						<small>渠道数</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-warning pull-right">回传日志设备</span>
+						<h5>接入设备</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 id="deviceCount" class="no-margins">0</h1>
+						<div class="stat-percent font-bold text-warning">
+							<span id="logbakDeviceRatio">0%</span> <i class="fa fa-bolt"></i>
+						</div>
+						<small>设备数</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-primary pull-right">成功率</span>
+						<h5>交易服务</h5>
+					</div>
+					<div class="ibox-content" style="position: relative;">
+						<h1 id="serviceTotalCount" class="no-margins">0</h1>
+						<div class="stat-percent font-bold text-navy">
+							<span id="serviceTotalSuccRatio">0%</span> <i class="fa fa-bolt"></i>
+						</div>
+						<small>总次数</small>
+						<div id="serviceDistribution" class="service-multi-model-distribution"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<h5>交易趋势</h5>
+						<div class="pull-right">
+							<div class="btn-group" id="btnGroup">
+								<button type="button" id="weekScreenBtn" class="btn btn-screen btn-xs btn-white active" onclick="handleQueryTransTrend('3')">周</button>
+								<button type="button" id="monthScreenBtn" class="btn btn-screen btn-xs btn-white" onclick="handleQueryTransTrend('2')">月</button>
+								<button type="button" id="yearScreenBtn" class="btn btn-screen btn-xs btn-white" onclick="handleQueryTransTrend('1')">年</button>
+							</div>
+						</div>
+					</div>
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-sm-9">
+								<div class="flot-chart" style="height: 300px;">
+									<div class="flot-chart-content" id="flot-dashboard-chart" style="width:100%; height: 300px;"></div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<ul class="stat-list">
+									<li>
+										<h2 id="timeRangeTotalServiceCount" class="no-margins">0</h2> <small>总交易量</small>
+										<div class="stat-percent">
+											<span id="timeRangeTotalServiceSuccRatio" title="成功率">0%</span>
+										</div>
+										<div class="progress progress-mini">
+											<div id="timeRangeTotalServiceSuccRatioBar" style="width: 0%;" class="progress-bar"></div>
+										</div>
+									</li>
+									<li>
+										<h2 id="timeRangeFaceServiceCount" class="no-margins">0</h2> <small>人脸交易量</small>
+										<div class="stat-percent">
+											<span id="timeRangeFaceServiceSuccRatio" title="成功率">0%</span>
+										</div>
+										<div class="progress progress-mini">
+											<div id="timeRangeFaceServiceSuccRatioBar" style="width: 0%;" class="progress-bar"></div>
+										</div>
+									</li>
+									<li>
+										<h2 id="timeRangeFingerServiceCount" class="no-margins">0</h2> <small>指纹交易量</small>
+										<div class="stat-percent">
+											<span id="timeRangeFingerServiceSuccRatio" title="成功率">0%</span>
+										</div>
+										<div class="progress progress-mini">
+											<div id="timeRangeFingerServiceSuccRatioBar" style="width: 0%;" class="progress-bar"></div>
+										</div>
+									</li>
+									<li>
+										<h2 id="timeRangeIrisServiceCount" class="no-margins">0</h2> <small>虹膜交易量</small>
+										<div class="stat-percent">
+											<span id="timeRangeIrisServiceSuccRatio" title="成功率">0%</span>
+										</div>
+										<div class="progress progress-mini">
+											<div id="timeRangeIrisServiceSuccRatioBar" style="width: 0%;" class="progress-bar"></div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="float-e-margins">
+					<div class="ibox-title">
+						<h5>实时交易信息</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-hover no-margins">
+							<thead>
+								<tr>
+									<th>业务流水码</th>
+									<th>渠道名称</th>
+									<th>人员标识</th>
+									<th>人员姓名</th>
+									<th>交易类型</th>
+									<th>交易结果</th>
+									<th>交易时间</th>
+									<th>交易耗时(ms)</th>
+								</tr>
+							</thead>
+							<tbody id="realTimeTransContent">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/ajax/libs/echarts/echarts.min.js}"></script>
+	<th:block th:include="include :: ctx" />
+	<script type="text/javascript">
+		var prefix = ctx + "statistic";
+		var transTrendChart = null;
+		var transTrendChartOption = {
+			color : [ '#1AB394', '#FF7DA1', '#3CB2EF', '#DE9325', '#D53A35' ],
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'cross',
+					crossStyle : {
+						color : '#1ab394'
+					}
+				}
+			},
+			grid : {
+				left : '30px',
+			},
+			toolbox : {
+				feature : {
+					dataView : {
+						show : true,
+						readOnly : false
+					},
+					magicType : {
+						show : true,
+						type : [ 'line', 'bar' ]
+					},
+					restore : {
+						show : true
+					},
+					saveAsImage : {
+						show : true
+					}
+				}
+			},
+			legend : {
+				left : '10px',
+				data : [ '总交易', '人脸', '指纹', '虹膜' ]
+			},
+			xAxis : [ {
+				type : 'category',
+				data : [],
+				axisPointer : {
+					type : 'shadow'
+				}
+			} ],
+			yAxis : [ {
+				type : 'value',
+				name : '交易量',
+				axisLabel : {
+					formatter : '{value}'
+				}
+			} ],
+			series : [ {
+				name : '总交易',
+				type : 'bar',
+				data : []
+			}, {
+				name : '人脸',
+				type : 'bar',
+				data : []
+			}, {
+				name : '指纹',
+				type : 'bar',
+				data : []
+			}, {
+				name : '虹膜',
+				type : 'bar',
+				data : []
+			} ]
+		};
+		$(document).ready(function() {
+			// 处理websocket连接
+			handleWebSocket();
+			// 查询人员基础信息数量
+			queryBasePersonCountInfo();
+			// 查询渠道数量
+			queryChannelCountInfo();
+			// 查询接入设备数量
+			queryDeviceCountInfo();
+			// 查询总的服务信息
+			queryServiceCountInfo();
+			// 查询交易趋势
+			handleQueryTransTrend("3");
+			// 查询实时交易
+			getRealTimeTrans();
+		});
+
+		// 查询人员基础数据数量信息
+		function queryBasePersonCountInfo() {
+			$.post(prefix + "/basePersonCountInfo", function(res) {
+				if (res.code === 0) {
+					$("#personCount").text(res.data.personCount);
+					$("#blackListRatio").text(res.data.blackListRatio + "%");
+				}
+			})
+		}
+
+		// 查询支持场景数量信息
+		function queryChannelCountInfo() {
+			$.post(prefix + "/channelCountInfo", function(res) {
+				if (res.code === 0) {
+					$("#channelCount").text(res.data.channelCount);
+					$("#multiBioChannelRatio").text(res.data.multiBioChannelRatio + "%");
+				}
+			})
+		}
+
+		// 查询接入设备数量
+		function queryDeviceCountInfo() {
+			$.post(prefix + "/deviceCountInfo", function(res) {
+				if (res.code === 0) {
+					$("#deviceCount").text(res.data.deviceCount);
+					$("#logbakDeviceRatio").text(res.data.logbakDeviceRatio + "%");
+				}
+			})
+		}
+
+		// 查询总的服务数量信息
+		function queryServiceCountInfo() {
+			$.post(prefix + "/serviceCountInfo", function(res) {
+				if (res.code === 0) {
+					$("#serviceTotalCount").text(res.data.serviceTotalCount);
+					$("#serviceTotalSuccRatio").text(res.data.serviceTotalSuccRatio + "%");
+				}
+			})
+		}
+
+		// 查询交易趋势
+		function queryServiceTransTrend(unit) {
+			$.post(prefix + "/transTrend", {
+				unit : unit
+			}, function(res) {
+				if (res.code === 0) {
+					if (!transTrendChart) {
+						transTrendChart = echarts.init(document.getElementById("flot-dashboard-chart"));
+					}
+					if (transTrendChartOption && typeof transTrendChartOption === "object") {
+						if ("3" === unit) {
+							transTrendChartOption.xAxis[0].data = res.data.weekDayList;
+						} else {
+							transTrendChartOption.xAxis[0].data = res.data.dateStrList;
+						}
+						transTrendChartOption.series[0].data = res.data.transTrendList;
+						transTrendChartOption.series[1].data = res.data.faceTransTrendList;
+						transTrendChartOption.series[2].data = res.data.fingerTransTrendList;
+						transTrendChartOption.series[3].data = res.data.irisTransTrendList;
+						transTrendChart.setOption(transTrendChartOption, true);
+					}
+				}
+			})
+		}
+
+		// 交易趋势查询
+		function handleQueryTransTrend(unit) {
+			$('.btn-screen').removeClass('active');
+			if ("1" === unit) {
+				$('#yearScreenBtn').addClass('active');
+			} else if ("2" === unit) {
+				$('#monthScreenBtn').addClass('active');
+			} else {
+				$('#weekScreenBtn').addClass('active');
+			}
+			$('#btnGroup').data('transTrendUnit', unit);
+			queryServiceTransTrend(unit);
+			queryCurrTimeRangeServiceCount(unit);
+		}
+
+		// 当前时间段（周、月、年）交易量查询
+		function queryCurrTimeRangeServiceCount(unit) {
+			$.post(prefix + "/serviceCountInfo", {
+				unit : unit
+			}, function(res) {
+				if (res.code === 0) {
+					$("#timeRangeTotalServiceCount").text(res.data.serviceTotalCount);
+					$("#timeRangeTotalServiceSuccRatio").text(res.data.serviceTotalSuccRatio + "%");
+					$("#timeRangeTotalServiceSuccRatioBar").css('width', res.data.serviceTotalSuccRatio + "%");
+					$("#timeRangeFaceServiceCount").text(res.data.faceServiceCount);
+					$("#timeRangeFaceServiceSuccRatio").text(res.data.faceServiceSuccRatio + "%");
+					$("#timeRangeFaceServiceSuccRatioBar").css('width', res.data.faceServiceSuccRatio + "%");
+					$("#timeRangeFingerServiceCount").text(res.data.fingerServiceCount);
+					$("#timeRangeFingerServiceSuccRatio").text(res.data.fingerServiceSuccRatio + "%");
+					$("#timeRangeFingerServiceSuccRatioBar").css('width', res.data.fingerServiceSuccRatio + "%");
+					$("#timeRangeIrisServiceCount").text(res.data.irisServiceCount);
+					$("#timeRangeIrisServiceSuccRatio").text(res.data.irisServiceSuccRatio + "%");
+					$("#timeRangeIrisServiceSuccRatioBar").css('width', res.data.irisServiceSuccRatio + "%");
+				}
+			})
+		}
+		
+		// 处理websocket连接
+		function handleWebSocket(){
+			var webSocket = null;
+	        if('WebSocket' in window){
+	            webSocket = new WebSocket('ws://'+location.host+'/biapwp/websocket/1')
+	        }else{
+	            alert('该浏览器不支持websocket通信');
+	        }
+	        webSocket.onopen = function () {
+	            console.log('建立连接');
+	        }
+	        webSocket.onclose = function () {
+	            console.log('关闭连接');
+	        }
+	        webSocket.onmessage = function (event) {
+	            var trHtml = '';
+	            if(event.data == '连接成功'){
+	            	$('#realTimeTransContent').html(trHtml);
+	            	return;
+	            }
+	            // 查询服务次数
+	            queryServiceCountInfo();
+	            // 查询交易趋势
+	            handleQueryTransTrend($('#btnGroup').data('transTrendUnit'));
+	            var data = JSON.parse(event.data);
+	            var trHtml = '';
+	           	if(data && Array.isArray(data) && data.length > 0){
+	           		for(var i = 0; i<data.length && i < 7; i++){
+	           			var trData = data[i];
+	           			var resultContent = trData.result == '0' ? '<span class="label label-primary">'+ trData.resultDesc +'</span>' : '<span class="label label-danger">'+ trData.resultDesc +'</span>';
+	           			var trClass = i % 2 == 0 ? 'even' : 'odd';
+	           			trHtml += '<tr class="trans-tr '+ trClass +'">' + 
+									'<td>'+ trData.receivedSeq +'</td>' + 
+									'<td>'+ trData.channelName +'</td>' + 
+									'<td>'+ trData.uniqueId +'</td>' + 
+									'<td>'+ trData.personName +'</td>' + 
+									'<td>'+ trData.busiType +'</td>' + 
+									'<td>'+ resultContent +'</td>' + 
+									'<td><i class="fa fa-clock-o"></i> '+ trData.createTime +'</td>' + 
+									'<td class="text-navy">'+ trData.timeUsed +'</td>' + 
+								 '</tr>'
+	           		}
+	           	}
+	           	$('#realTimeTransContent').html(trHtml);
+	        }
+	        webSocket.onerror = function () {
+	            alert('websocket通信异常');
+	        }
+	        window.onbeforeunload = function () {
+	            webSocket.close();
+	        }
+		}
+		
+		// 获取实时系统交易
+		function getRealTimeTrans() {
+			$.post(prefix + "/realTimeTrans/1", function(res) {
+				if (res.code === 0) {}
+			})
+		}
+	</script>
+</body>
+</html>

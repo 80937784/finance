@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('基础数据_接口请求信息详细')" />
+	<th:block th:include="include :: jsonview-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m-t" id="signupForm">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">交易标题：</label>
+			<div class="form-control-static" th:text="${record.transTitle}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求时间：</label>
+			<div class="form-control-static" th:text="${#dates.format(record.receivedTime,'yyyy-MM-dd HH:mm:ss')}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">响应时间：</label>
+			<div class="form-control-static" th:text="${#dates.format(record.sendTime,'yyyy-MM-dd HH:mm:ss')}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求路径：</label>
+			<div class="form-control-static" th:text="${record.transUrl}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">处理方法：</label>
+			<div class="form-control-static" th:text="${record.classMethod}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求报文：</label>
+			<div class="form-control-static"><pre id="requestMsg"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">响应报文：</label>
+			<div class="form-control-static"><pre id="jsonResult"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">状态：</label>
+			<div class="form-control-static" th:class="${record.statusCode == '0' ? 'label label-primary' : 'label label-danger'}" th:text="${record.statusCode == '0' ? '成功' : '失败'}">
+			</div>
+		</div>
+	</form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: jsonview-js" />
+    <script th:inline="javascript">
+	    $(function() {
+	    	var requestMsg = [[${record.requestMsg}]];
+	    	if ($.common.isNotEmpty(requestMsg) && requestMsg.length < 2000) {
+	    		$("#requestMsg").JSONView(requestMsg);
+	    	} else {
+	    		$("#requestMsg").text(requestMsg);
+	    	}
+	    	var jsonResult = [[${record.responseMsg}]];
+	    	var statusCode = [[${record.statusCode}]];
+	    	if ($.common.isNotEmpty(jsonResult) && jsonResult.length < 2000 && statusCode !=="1") {
+	    		$("#jsonResult").JSONView(jsonResult);
+	    	} else {
+	    		$("#jsonResult").text(jsonResult);
+	    	}
+	    });
+    </script>
+</body>
+</html>

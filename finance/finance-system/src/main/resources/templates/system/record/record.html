@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('基础数据_接口请求报文信息列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <p>交易标题：</p>
+                            <input type="text" name="transTitle"/>
+                        </li>
+                        <li>
+                            <p>客户端IP：</p>
+                            <input type="text" name="clientIp"/>
+                        </li>
+                        <li>
+                            <p>渠道编码：</p>
+                            <input type="text" name="channelCode"/>
+                        </li>
+                        <li>
+                            <p>状态码：</p>
+                            <input type="text" name="statusCode"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="system:record:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:record:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var detailFlag = [[${@permission.hasPermi('system:record:detail')}]];
+    var removeFlag = [[${@permission.hasPermi('system:record:remove')}]];
+    var prefix = ctx + "system/record";
+
+    $(function () {
+        var options = {
+            detailUrl: prefix + "/detail/{id}",
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "接口报文",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'transCode',
+                    title: '交易码',
+                    visible: false
+                },
+                {
+                    field: 'transTitle',
+                    title: '交易标题'
+                },
+                {
+                    field: 'receivedTime',
+                    title: '请求时间'
+                },
+                {
+                    field: 'requestMsg',
+                    title: '请求报文',
+                    visible: false
+                },
+                {
+                    field: 'clientIp',
+                    title: '客户端IP'
+                },
+                {
+                    field: 'sendTime',
+                    title: '响应时间'
+                },
+                {
+                    field: 'responseMsg',
+                    title: '响应报文',
+                    visible: false
+                },
+                {
+                    field: 'timeUsed',
+                    title: '耗时(ms)'
+                },
+                {
+                    field: 'statusCode',
+                    title: '状态',
+                    formatter: function (value) {
+                        return value === '0' ? '<span class="badge badge-primary">成功</span>' : '<span class="badge badge-danger">失败</span>';
+                    }
+                },
+                {
+                    field: 'transUrl',
+                    title: '请求路径',
+                    visible: false
+                },
+                {
+                    field: 'classMethod',
+                    title: '处理方法',
+                    visible: false
+                },
+                {
+                    field: 'channelCode',
+                    title: '渠道编码'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-info"></i>详细</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

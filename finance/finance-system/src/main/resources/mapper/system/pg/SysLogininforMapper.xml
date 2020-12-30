@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysLogininforMapper">
+
+	<insert id="insertLogininfor" parameterType="SysLogininfor" databaseId="postgresql">
+	    <selectKey keyProperty="infoId" resultType="long" order="BEFORE">
+			SELECT nextval('sys_logininfor_info_id_seq'::regclass) as infoId  
+		</selectKey>
+		insert into sys_logininfor (info_id, login_name, status, ipaddr, login_location, browser, os, msg, login_time)
+		values (#{infoId}, #{loginName}, #{status}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{msg}, now())
+	</insert>
+	
+	<select id="selectLogininforList" parameterType="SysLogininfor" resultMap="SysLogininforResult" databaseId="postgresql">
+		select info_id,login_name,ipaddr,login_location,browser,os,status,msg,login_time from sys_logininfor
+		<where>
+			<if test="ipaddr != null and ipaddr != ''">
+				AND ipaddr like concat(concat('%',#{ipaddr}),'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="loginName != null and loginName != ''">
+				AND login_name like concat(concat('%',#{loginName}),'%')
+			</if>
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+				and login_time &gt;= to_date(#{params.beginTime},'YYYY-MM-DD HH24:MI:SS')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+				and login_time &lt;= to_date(#{params.endTime},'YYYY-MM-DD HH24:MI:SS')
+			</if>
+		</where>
+	</select>
+	
+</mapper> 

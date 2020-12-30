@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BaseRequestHisRecordMapper">
+  
+    <insert id="addPartition" databaseId="oracle">
+		 CALL sp_create_partition(sysdate + #{offsetDay}, #{tableName},'YYYYMMDD')
+    </insert>
+    
+    <delete id="dropPartition" databaseId="oracle">
+		 CALL sp_drop_partition(sysdate - #{offsetDay}, #{tableName},'YYYYMMDD')
+    </delete>
+    
+</mapper>

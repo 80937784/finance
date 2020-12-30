@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserOnlineMapper">
+
+<insert id="saveOnline" parameterType="SysUserOnline" databaseId="postgresql">
+		INSERT INTO SYS_USER_ONLINE ( SESSIONID, LOGIN_NAME, DEPT_NAME, IPADDR, LOGIN_LOCATION, BROWSER, OS, STATUS, START_TIMESTAMP, LAST_ACCESS_TIME, EXPIRE_TIME )
+		VALUES
+			(#{sessionId}, #{loginName}, #{deptName}, #{ipaddr}, #{loginLocation}, #{browser}, #{os}, #{status}, #{startTimestamp}, #{lastAccessTime}, #{expireTime})
+		ON CONFLICT ( SESSIONID ) DO UPDATE 
+			SET LOGIN_NAME = #{loginName},
+				DEPT_NAME =  #{deptName},
+				IPADDR = #{ipaddr},
+				LOGIN_LOCATION =  #{loginLocation},
+				BROWSER = #{browser},
+				OS = #{os},
+				STATUS = #{status},
+				START_TIMESTAMP = #{startTimestamp},
+				LAST_ACCESS_TIME = #{lastAccessTime},
+				EXPIRE_TIME =  #{expireTime}
+	</insert>
+	
+	<select id="selectOnlineByExpired" parameterType="String" resultMap="SysUserOnlineResult" databaseId="postgresql">
+		<include refid="selectOnlineVo"/> o 
+		WHERE o.last_access_time <![CDATA[ <= ]]> to_date(#{lastAccessTime}, 'YYYY-MM-DD HH24:MI:SS') ORDER BY o.last_access_time ASC
+	</select>
+
+</mapper> 
