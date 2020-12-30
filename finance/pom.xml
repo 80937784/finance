@@ -218,6 +218,12 @@
                 <artifactId>finance-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+            <!-- 业务模块-->
+            <dependency>
+                <groupId>cn.zfx</groupId>
+                <artifactId>finance-business</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -228,6 +234,7 @@
         <module>finance-quartz</module>
         <module>finance-generator</module>
         <module>finance-common</module>
+        <module>finance-business</module>
     </modules>
     <packaging>pom</packaging>
 

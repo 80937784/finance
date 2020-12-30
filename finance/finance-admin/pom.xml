@@ -83,6 +83,11 @@
 			<groupId>cn.zfx</groupId>
 			<artifactId>finance-generator</artifactId>
 		</dependency>
+		<!-- 业务模块 -->
+		<dependency>
+			<groupId>cn.zfx</groupId>
+			<artifactId>finance-business</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
