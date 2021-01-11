@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FinVoucherMapper">
+    
+    <resultMap type="FinVoucher" id="FinVoucherResult">
+        <result property="id"    column="id"    />
+        <result property="voucherNum"    column="voucher_num"    />
+        <result property="debitAmount"    column="debit_amount"    />
+        <result property="creditAmount"    column="credit_amount"    />
+        <result property="subjectId"    column="subject_id"    />
+        <result property="vouDate"    column="vou_date"    />
+        <result property="summary"    column="summary"    />
+        <result property="vouType"    column="vou_type"    />
+        <result property="busType"    column="bus_type"    />
+        <result property="creator"    column="creator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updator"    column="updator"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFinVoucherVo">
+        select id, voucher_num, debit_amount, credit_amount, subject_id, vou_date, summary, vou_type, bus_type, creator, create_time, updator, update_time from fin_voucher
+    </sql>
+
+    <select id="selectFinVoucherList" parameterType="FinVoucher" resultMap="FinVoucherResult">
+        <include refid="selectFinVoucherVo"/>
+        <where>  
+            <if test="voucherNum != null  and voucherNum != ''"> and voucher_num = #{voucherNum}</if>
+            <if test="subjectId != null  and subjectId != ''"> and subject_id = #{subjectId}</if>
+            <if test="vouDate != null  and vouDate != ''"> and vou_date = #{vouDate}</if>
+            <if test="vouType != null  and vouType != ''"> and vou_type = #{vouType}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinVoucherById" parameterType="String" resultMap="FinVoucherResult">
+        <include refid="selectFinVoucherVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinVoucher" parameterType="FinVoucher">
+        insert into fin_voucher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="voucherNum != null  and voucherNum != ''">voucher_num,</if>
+            <if test="debitAmount != null ">debit_amount,</if>
+            <if test="creditAmount != null ">credit_amount,</if>
+            <if test="subjectId != null  and subjectId != ''">subject_id,</if>
+            <if test="vouDate != null  and vouDate != ''">vou_date,</if>
+            <if test="summary != null  and summary != ''">summary,</if>
+            <if test="vouType != null  and vouType != ''">vou_type,</if>
+            <if test="busType != null  and busType != ''">bus_type,</if>
+            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updator != null  and updator != ''">updator,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="voucherNum != null  and voucherNum != ''">#{voucherNum},</if>
+            <if test="debitAmount != null ">#{debitAmount},</if>
+            <if test="creditAmount != null ">#{creditAmount},</if>
+            <if test="subjectId != null  and subjectId != ''">#{subjectId},</if>
+            <if test="vouDate != null  and vouDate != ''">#{vouDate},</if>
+            <if test="summary != null  and summary != ''">#{summary},</if>
+            <if test="vouType != null  and vouType != ''">#{vouType},</if>
+            <if test="busType != null  and busType != ''">#{busType},</if>
+            <if test="creator != null  and creator != ''">#{creator},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updator != null  and updator != ''">#{updator},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinVoucher" parameterType="FinVoucher">
+        update fin_voucher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="voucherNum != null  and voucherNum != ''">voucher_num = #{voucherNum},</if>
+            <if test="debitAmount != null ">debit_amount = #{debitAmount},</if>
+            <if test="creditAmount != null ">credit_amount = #{creditAmount},</if>
+            <if test="subjectId != null  and subjectId != ''">subject_id = #{subjectId},</if>
+            <if test="vouDate != null  and vouDate != ''">vou_date = #{vouDate},</if>
+            <if test="summary != null  and summary != ''">summary = #{summary},</if>
+            <if test="vouType != null  and vouType != ''">vou_type = #{vouType},</if>
+            <if test="busType != null  and busType != ''">bus_type = #{busType},</if>
+            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updator != null  and updator != ''">updator = #{updator},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinVoucherById" parameterType="String">
+        delete from fin_voucher where id = #{id}
+    </delete>
+
+    <delete id="deleteFinVoucherByIds" parameterType="String">
+        delete from fin_voucher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

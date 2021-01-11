@@ -1,7 +1,7 @@
-package com.finance.business.controller;
+package com.ruoyi.business.controller;
 
-import com.finance.business.domain.FinSubject;
-import com.finance.business.service.IFinSubjectService;
+import com.ruoyi.business.domain.FinSubject;
+import com.ruoyi.business.service.IFinSubjectService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -22,14 +22,13 @@ import java.util.List;
 
 /**
  * 科目管理Controller
- * 
+ *
  * @author zfx
  * @date 2021-01-11
  */
 @Controller
 @RequestMapping("/business/subject")
-public class FinSubjectController extends BaseController
-{
+public class FinSubjectController extends BaseController {
     private String prefix = "business/subject";
 
     @Autowired
@@ -37,8 +36,7 @@ public class FinSubjectController extends BaseController
 
     @RequiresPermissions("business:subject:view")
     @GetMapping()
-    public String subject()
-    {
+    public String subject() {
         return prefix + "/subject";
     }
 
@@ -48,8 +46,7 @@ public class FinSubjectController extends BaseController
     @RequiresPermissions("business:subject:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(FinSubject finSubject)
-    {
+    public TableDataInfo list(FinSubject finSubject) {
         startPage();
         List<FinSubject> list = finSubjectService.selectFinSubjectList(finSubject);
         return getDataTable(list);
@@ -62,8 +59,7 @@ public class FinSubjectController extends BaseController
     @Log(title = "科目管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(FinSubject finSubject)
-    {
+    public AjaxResult export(FinSubject finSubject) {
         List<FinSubject> list = finSubjectService.selectFinSubjectList(finSubject);
         ExcelUtil<FinSubject> util = new ExcelUtil<FinSubject>(FinSubject.class);
         return util.exportExcel(list, "subject");
@@ -73,8 +69,7 @@ public class FinSubjectController extends BaseController
      * 新增科目管理
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -85,8 +80,7 @@ public class FinSubjectController extends BaseController
     @Log(title = "科目管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(FinSubject finSubject)
-    {
+    public AjaxResult addSave(FinSubject finSubject) {
         return toAjax(finSubjectService.insertFinSubject(finSubject));
     }
 
@@ -94,8 +88,7 @@ public class FinSubjectController extends BaseController
      * 修改科目管理
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") String id, ModelMap mmap) {
         FinSubject finSubject = finSubjectService.selectFinSubjectById(id);
         mmap.put("finSubject", finSubject);
         return prefix + "/edit";
@@ -108,8 +101,7 @@ public class FinSubjectController extends BaseController
     @Log(title = "科目管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(FinSubject finSubject)
-    {
+    public AjaxResult editSave(FinSubject finSubject) {
         return toAjax(finSubjectService.updateFinSubject(finSubject));
     }
 
@@ -118,10 +110,9 @@ public class FinSubjectController extends BaseController
      */
     @RequiresPermissions("business:subject:remove")
     @Log(title = "科目管理", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(finSubjectService.deleteFinSubjectByIds(ids));
     }
 }

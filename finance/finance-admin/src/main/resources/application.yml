@@ -11,13 +11,13 @@ ruoyi:
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  profile: ./uploadPath
   # 获取ip地址开关
   addressEnabled: true
   # 登录页欢迎语
-  welcomeMsg: 欢迎使用 授权管理系统
+  welcomeMsg: 欢迎使用 管理系统
   # 应用中文名称
-  appname: 授权管理系统
+  appname: 管理系统
   
 
 # 开发环境配置

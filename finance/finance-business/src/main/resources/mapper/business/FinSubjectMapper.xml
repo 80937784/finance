@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FinSubjectMapper">
+    
+    <resultMap type="FinSubject" id="FinSubjectResult">
+        <result property="id"    column="id"    />
+        <result property="subName"    column="sub_name"    />
+        <result property="subNum"    column="sub_num"    />
+        <result property="subType"    column="sub_type"    />
+        <result property="creator"    column="creator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updator"    column="updator"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFinSubjectVo">
+        select id, sub_name, sub_num, sub_type, creator, create_time, updator, update_time from fin_subject
+    </sql>
+
+    <select id="selectFinSubjectList" parameterType="FinSubject" resultMap="FinSubjectResult">
+        <include refid="selectFinSubjectVo"/>
+        <where>  
+            <if test="subName != null  and subName != ''"> and sub_name like concat('%', #{subName}, '%')</if>
+            <if test="subNum != null  and subNum != ''"> and sub_num = #{subNum}</if>
+            <if test="subType != null  and subType != ''"> and sub_type = #{subType}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinSubjectById" parameterType="String" resultMap="FinSubjectResult">
+        <include refid="selectFinSubjectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinSubject" parameterType="FinSubject">
+        insert into fin_subject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="subName != null  and subName != ''">sub_name,</if>
+            <if test="subNum != null  and subNum != ''">sub_num,</if>
+            <if test="subType != null  and subType != ''">sub_type,</if>
+            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updator != null  and updator != ''">updator,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="subName != null  and subName != ''">#{subName},</if>
+            <if test="subNum != null  and subNum != ''">#{subNum},</if>
+            <if test="subType != null  and subType != ''">#{subType},</if>
+            <if test="creator != null  and creator != ''">#{creator},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updator != null  and updator != ''">#{updator},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinSubject" parameterType="FinSubject">
+        update fin_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subName != null  and subName != ''">sub_name = #{subName},</if>
+            <if test="subNum != null  and subNum != ''">sub_num = #{subNum},</if>
+            <if test="subType != null  and subType != ''">sub_type = #{subType},</if>
+            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updator != null  and updator != ''">updator = #{updator},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinSubjectById" parameterType="String">
+        delete from fin_subject where id = #{id}
+    </delete>
+
+    <delete id="deleteFinSubjectByIds" parameterType="String">
+        delete from fin_subject where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
