@@ -51,7 +51,18 @@ public class FinSubjectController extends BaseController {
         List<FinSubject> list = finSubjectService.selectFinSubjectList(finSubject);
         return getDataTable(list);
     }
-
+    /**
+     * 查询待加入渠道库的人员列表
+     *
+     * @return
+     */
+    @PostMapping("/listSubject")
+    @ResponseBody
+    public TableDataInfo selectListSubject(FinSubject finSubject) {
+        startPage();
+        List<FinSubject> list = finSubjectService.selectFinSubjectList(finSubject);
+        return getDataTable(list);
+    }
     /**
      * 导出科目管理列表
      */
@@ -115,4 +126,18 @@ public class FinSubjectController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(finSubjectService.deleteFinSubjectByIds(ids));
     }
+
+    @PostMapping("/selectSubjects")
+    @ResponseBody
+    public TableDataInfo selectSubjects(FinSubject finSubject) {
+        startPage();
+        List<FinSubject> list = finSubjectService.selectFinSubjectList(finSubject);
+        return getDataTable(list);
+    }
+    @GetMapping("/selectSubjects/{id}")
+    public String selectSubjects(@PathVariable("id") String id ,ModelMap mmap) {
+        mmap.put("id", id);
+        return prefix + "/listSubject";
+    }
+
 }

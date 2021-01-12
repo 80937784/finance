@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('科目管理列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>科目名称：</label>
+                            <input type="text" name="subName"/>
+                        </li>
+                        <li>
+                            <label>科目编号：</label>
+                            <input type="text" name="subNum"/>
+                        </li>
+                        <li>
+                            <label>科目类型：</label>
+                            <select name="subType" th:with="type=${@dict.getType('subject_type')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="business:subject:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="business:subject:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="business:subject:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="business:subject:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var subTypeDatas = [[${@dict.getType('subject_type')}]];
+    var prefix = ctx + "business/subject";
+    var sId = '';
+    $(function () {
+        sId = [[${id}]];
+        var options = {
+            url: prefix + "/selectSubjects",
+            modalName: "科目列表",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'subName',
+                    title: '科目名称'
+                },
+                {
+                    field: 'subNum',
+                    title: '科目编号'
+                },
+                {
+                    field: 'subType',
+                    title: '科目类型',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(subTypeDatas, value);
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function submitHandler() {
+        var rows = $("#" + table.options.id).bootstrapTable('getSelections');
+        if (!rows || !rows.length) {
+            $.modal.alertWarning("请选择一条记录");
+        } else if (rows.length > 1) {
+            $.modal.alertWarning("只能选择一条记录");
+        } else {
+            $.modal.close();
+            var ids = [];
+            var names = [];
+            $.each(rows, function (index, row) {
+                ids.push(row['id']);
+                names.push(row['subName']);
+            });
+            parent.$("[id='subjectNum" + sId + "']").val(ids.join(","));
+            parent.$("[id='subjectName" + sId + "']").val(names.join(","));
+            // parent.$("[name='customerName']").trigger("input");
+            // parent.$("[name='customerName']").trigger("focus");
+        }
+    }
+</script>
+</body>
+</html>
